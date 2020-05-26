@@ -1,20 +1,22 @@
+#Data Cleaning
 using CSV, DataFrames
 
-df = CSV.read("./bank-additional-full.csv")
-dff=convert(Matrix,df)
+dataf = CSV.read("./bank-data.csv")
+dff=convert(Matrix,dataf)
 
 
 #extract features
-features = df[:, 11: 12]
-target = df[:, end]
+
+features = dataf[:, 11: 12]
+target = dataf[:, end]
 
 
 
 #renaming column
 
-rename!(df,Dict(:y => :placed_deposit))
+rename!(dataf,Dict(:y => :placed_deposit))
 
-#clean data - string to numeric
+#clean data - convert string to numeric
 
 #DATA CLEANING
 size(features)[2]
