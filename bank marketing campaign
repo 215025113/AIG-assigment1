@@ -31,3 +31,67 @@ for i = 1:(size(features)[2]-2)
         end
     end
 end
+
+
+****************************************************************************************************
+
+using CSV, DataFrames, Plots
+
+dataf = CSV.read("./bank-data.csv")
+dataa = convert(Matrix,dataf)
+
+## preprocess the data
+
+size(dataa)[2]
+for i = 1:(size(dataa)[2]-2)
+    uniquee = unique(dataa[:,i])
+    for j = 1:size(dataa)[1]
+        for k = 1:size(uniquee)[1]
+            if dataa[j,i] == uniquee[k]
+                dataa[j,i] = Int(k)
+            end
+        end
+    end
+    println(i)
+end
+
+
+Dataff = dataa[:,end-2:end]
+#apu = Array{Any,1}(size(dataa)[1])
+apu = fill(1, size(dataa)[1])
+for i = 1:size(Dataff)[1]
+    if sum(Dataff[i,:])/3.0 >= 10
+        apu[i] = 1
+    else apu[i] = 0
+    end
+end
+testst = dataa[:,end-2]+dataa[:,end-1]+dataa[:,end]
+testst./3
+
+concluded = dataa[:,1:end-2]
+values = apu
+
+indd = ceil(0.8*size(concluded,1))
+splitt = convert(Int,indd)
+
+train_data = concluded[1:splitt,:]
+train_values = values[1:splitt]
+bias = fill(1, splitt)
+train_data = hcat(train_data,bias)
+train_data = train_data./maximum(train_data)
+
+## start optimizing
+
+theetaa = apu = fill(0.0, size(train_data)[2])
+steps = 1000
+alphaa = 1
+m = size(train_data,1)
+lambda = 1
+for i = 1:steps
+    apu = transpose(theetaa)*(transpose(train_data) .- transpose(train_values))
+    global theetaa = ((theetaa) .- alphaa/m .* (transpose(train_data)*transpose(apu)
+    .+ lambda.*(theetaa)))
+end
+print(theetaa)
+print(error)
+1 .- theetaa
